@@ -13,8 +13,8 @@ import com.travel.dbc.DatabaseConnection;
 import com.travel.vo.Scenery;
 
 /**
- * 	¸ÃÀàÊÇÊı¾İ²ãµÄÊµÏÖÀà¡£
- * @author ãåÔÆ
+ * 	è¯¥ç±»æ˜¯æ•°æ®å±‚çš„å®ç°ç±»ã€‚
+ * @author æ²äº‘
  */
 public class SceneryDaoImpl implements SceneryDao {
 	private Connection conn;
@@ -23,7 +23,7 @@ public class SceneryDaoImpl implements SceneryDao {
 	private PreparedStatement psPic;
 
 	/**
-	 * 	ÊµÀı»¯Êı¾İ²ã×ÓÀà¶ÔÏó
+	 * 	å®ä¾‹åŒ–æ•°æ®å±‚å­ç±»å¯¹è±¡
 	 */
 	public SceneryDaoImpl() {
 		try {
@@ -66,7 +66,7 @@ public class SceneryDaoImpl implements SceneryDao {
 				psPic.executeUpdate();
 			}
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "´´½¨Ê§°Ü");
+			JOptionPane.showMessageDialog(null, "åˆ›å»ºå¤±è´¥");
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -95,14 +95,19 @@ public class SceneryDaoImpl implements SceneryDao {
 			psAddress.setString(3, s.getSceneryCity());
 			psAddress.setString(4, s.getSceneryAddress());
 			psAddress.executeUpdate();
+			
 
-			ArrayList<String> tmp = s.getSceneryPic();
-			for (String str : tmp) {
-				psPic.setString(1, str);
+			psPic = conn.prepareStatement("delete from t_pic where pic_id = '"+s.getSceneryNumber()+"'");
+			psPic.executeUpdate("delete from t_pic where pic_id = '"+s.getSceneryNumber()+"'");
+			
+			psPic = conn.prepareStatement("insert into t_pic(pic_id,pic_path) values(?,?)");
+			for (String strPath : s.getSceneryPic()) {
+				psPic.setInt(1, s.getSceneryNumber());
+				psPic.setString(2, strPath);
 				psPic.executeUpdate();
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, " ĞŞ¸ÄÊ§°Ü");
+			JOptionPane.showMessageDialog(null, " ä¿®æ”¹å¤±è´¥");
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -117,7 +122,7 @@ public class SceneryDaoImpl implements SceneryDao {
 
 			psScenery.executeUpdate(sql);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "É¾³ıÊ§°Ü");
+			JOptionPane.showMessageDialog(null, "åˆ é™¤å¤±è´¥");
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -155,7 +160,7 @@ public class SceneryDaoImpl implements SceneryDao {
 				scenery.setSceneryPic(sceneryPath);
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "²éÑ¯Ê§°Ü");
+			JOptionPane.showMessageDialog(null, "æŸ¥è¯¢å¤±è´¥");
 			e.printStackTrace();
 			return null;
 		} finally {
@@ -174,7 +179,7 @@ public class SceneryDaoImpl implements SceneryDao {
 				Vector row = new Vector();
 				String addressId = null;
 				for (int col = 1; col <= rsScenery.getMetaData().getColumnCount(); col++) {
-					// ÒòÎªidÊÇintÀàĞÍ£¬ĞèÒªÓÃif½øĞĞÅĞ¶Ï
+					// å› ä¸ºidæ˜¯intç±»å‹ï¼Œéœ€è¦ç”¨ifè¿›è¡Œåˆ¤æ–­
 					if (col == 1) {
 						addressId = String.valueOf(rsScenery.getInt(col));
 						row.add(addressId);
@@ -197,7 +202,7 @@ public class SceneryDaoImpl implements SceneryDao {
 				vector.add(row);
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "²éÑ¯Ê§°Ü");
+			JOptionPane.showMessageDialog(null, "æŸ¥è¯¢å¤±è´¥");
 			e.printStackTrace();
 			return null;
 		} finally {
@@ -216,7 +221,7 @@ public class SceneryDaoImpl implements SceneryDao {
 				Vector row = new Vector();
 				String addressId = null;
 				for (int col = 1; col <= rsScenery.getMetaData().getColumnCount(); col++) {
-					// ÒòÎªidÊÇintÀàĞÍ£¬ĞèÒªÓÃif½øĞĞÅĞ¶Ï
+					// å› ä¸ºidæ˜¯intç±»å‹ï¼Œéœ€è¦ç”¨ifè¿›è¡Œåˆ¤æ–­
 					if (col == 1) {
 						addressId = String.valueOf(rsScenery.getInt(col));
 					} else if (col == 2) {
@@ -242,7 +247,7 @@ public class SceneryDaoImpl implements SceneryDao {
 				}
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "É¸Ñ¡Ê§°Ü");
+			JOptionPane.showMessageDialog(null, "ç­›é€‰å¤±è´¥");
 			e.printStackTrace();
 			return null;
 		} finally {
